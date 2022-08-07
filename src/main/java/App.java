@@ -8,13 +8,9 @@ import java.util.List;
 
 public class App {
     /**
-     * num of maxim friends possible
-     */
-    private final int MAX_FRIENDS = 10;
-    /**
      * array where all friends are added.
      */
-    private final Friend[] friends = new Friend[10];
+    private final List<Friend> friends = new ArrayList<>();
 
     /**
      * Adds new friend to array Friend[]
@@ -25,23 +21,9 @@ public class App {
     public void addFriend(String name, int incDays) throws Exception {
 
         if (this.friendAlreadyExists(name) >= 0) {
-
             throw new Exception("friends name already exists");
         }
-
-        for (int i = 0; i < MAX_FRIENDS; i++) {
-
-            if (friends[i] == null) {
-
-                friends[i] = new Friend(name, incDays);
-
-                return;
-            }
-        }
-
-
-        throw new Exception("Not room for more friends :/");
-
+        friends.add(new Friend(name, incDays));
     }
 
     private void friendLoader(String name, LocalDate nextDate, int incDays) throws Exception {
@@ -50,26 +32,13 @@ public class App {
 
             throw new Exception("friends name already exists");
         }
-
-        for (int i = 0; i < MAX_FRIENDS; i++) {
-
-            if (friends[i] == null) {
-
-                try {
-                    friends[i] = new Friend(name, nextDate, incDays);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    System.out.printf("incorrect format: name=[%s], nextDate=[%s], incDays=[%d]\n", name, nextDate.toString(), incDays);
-                    //skip this entry
-                }
-
-                return;
-            }
+        try {
+            friends.add(new Friend(name, nextDate, incDays));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.printf("incorrect format: name=[%s], nextDate=[%s], incDays=[%d]\n", name, nextDate.toString(), incDays);
+            //skip this entry
         }
-
-
-        throw new Exception("Not room for more friends :/");
-
     }
 
     /**
@@ -82,9 +51,7 @@ public class App {
         int i = this.friendAlreadyExists(name);
 
         if (i >= 0) {
-
-            friends[i] = null;
-
+            friends.remove(i);
         }
     }
 
@@ -96,19 +63,11 @@ public class App {
      */
     public int friendAlreadyExists(String name) {
 
-        for (int i = 0; i < MAX_FRIENDS; i++) {
-
-            if (friends[i] == null) {
-
-                continue;
-            }
-
-            if (name.equals(friends[i].getName())) {
-
+        for (int i = 0; i < friends.size(); i++) {
+            if (name.equals(friends.get(i).getName())) {
                 return i;
             }
         }
-
         return -1;
     }
 
@@ -137,17 +96,9 @@ public class App {
         List<Friend> list = getFriendList();
         list.sort(Comparator.comparing(Friend::getNextDate));
         //list.sort((Friend a, Friend b) -> a.getNextDate().compareTo(b.getNextDate()));
-
         return list;
     }
 
-    /*
-        private static int compareFriendByName(Friend a, Friend b) {
-            String aName = a.getName();
-            String bName = b.getName();
-            return aName.compareTo(bName);
-        }
-    */
     public List<Friend> getFriendListSortedByName() {
         List<Friend> list = getFriendList();
         //list.sort(App::compareFriendByName);
@@ -164,16 +115,11 @@ public class App {
     public Friend getFriend(String name) throws Exception {
 
         int i = this.friendAlreadyExists(name);
-
         if (i >= 0) {
-
-            return friends[i];
-
+            return friends.get(i);
         } else {
-
             throw new Exception("this friend doesn't exist");
         }
-
     }
 
     /**
@@ -193,10 +139,7 @@ public class App {
 
     public void loadData() throws Exception {
 
-        for (int i = 0; i < MAX_FRIENDS; i++) {
-
-            friends[i] = null;
-        }
+        friends.clear();
 
         try {
             File file = new File("friendList.txt");

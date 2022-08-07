@@ -71,7 +71,7 @@ public class Main {
                     break;
                 }
                 if (app.friendAlreadyExists(lovedFriend) >= 0) {
-                    System.out.println("name already in use by some other of your stupid friends (you're stupid as well");
+                    System.out.println("name already in use by some other of your stupid friends (you're stupid as well)");
                     break;
                 }
                 System.out.println("enter days between appointments");
