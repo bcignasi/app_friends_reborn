@@ -25,31 +25,31 @@ class AppTest {
 
     // Fechas relativas a hoy (en formato texto)
     String fechaHoy = today.toString();
+    String fechaMaria = fechaHoy;
     String fechaMas6 = today.plusDays(6).toString();
-    String fechaMenos1 = today.plusDays(-1).toString();
-    String fechaMenos2 = today.plusDays(-2).toString();
-    String fechaMenos16 = today.plusDays(-16).toString();
-    //String fechaMas1 = today.plusDays(1).toString();
-    //String fechaMas2 = today.plusDays(2).toString();
-    String fechaMas16 = today.plusDays(16).toString();
-
     // Asigno esas fechas relativas a cada usuario para no liarme al aplicarlas
     String fechaPepe = fechaMas6;
-    String fechaMaria = fechaHoy;
-    String fechaIgnasi = fechaMenos2;
-    String fechaGuille = fechaMenos16;
+    String fechaMenos1 = today.plusDays(-1).toString();
     String fechaJuan = fechaMenos1;
-    String fechaScarlett = fechaMas16;
+    String fechaMenos2 = today.plusDays(-2).toString();
+    String fechaIgnasi = fechaMenos2;
+    String fechaMenos16 = today.plusDays(-16).toString();
+    String fechaGuille = fechaMenos16;
+    String fechaMas5 = today.plusDays(+5).toString();
+    String fechaGuilleActualizada = fechaMas5;
 
     // La lista de usuarios con las fechas sincronizadas a día de hoy
     String mockingList = String.format("""
-                pepe,%s,7
-                maria,%s,1
-                ignasi,%s,4
-                guille,%s,7
-                juan,%s,7
-                """, fechaPepe, fechaMaria, fechaIgnasi, fechaGuille, fechaJuan);
-
+            pepe,%s,7
+            maria,%s,1
+            ignasi,%s,4
+            guille,%s,7
+            juan,%s,7
+            """, fechaPepe, fechaMaria, fechaIgnasi, fechaGuille, fechaJuan);
+    //String fechaMas1 = today.plusDays(1).toString();
+    //String fechaMas2 = today.plusDays(2).toString();
+    String fechaMas16 = today.plusDays(16).toString();
+    String fechaScarlett = fechaMas16;
     // Para el mocking guardo la friendList.txt original en friendList.txt.bak
     // Y así la recreo para las pruebas, al final restauraré la original
     String friendListBackupFile = "friendList.txt.bak";
@@ -118,7 +118,7 @@ class AppTest {
         assertEquals(fechaPepe, friend.getNextDate().toString());
         assertEquals(7, friend.getIncDays());
 
-        friend = lista.get(lista.size()-1);
+        friend = lista.get(lista.size() - 1);
         assertEquals("juan", friend.getName());
         assertEquals(fechaJuan, friend.getNextDate().toString());
         assertEquals(7, friend.getIncDays());
@@ -207,7 +207,7 @@ class AppTest {
     void comprobar_que_updateFriends_convierte_todas_las_fechas_en_futuras() {
         LocalDate today = LocalDate.now();
         app.updateFriends();
-        for(Friend friend : app.getFriendList()) {
+        for (Friend friend : app.getFriendList()) {
             LocalDate ld = friend.getNextDate();
             assertFalse(ld.isBefore(today));
         }
@@ -236,5 +236,12 @@ class AppTest {
     void comprobar_errores() {
         assertThrows(Exception.class,
                 () -> app.editNextDateManual("ignasi", LocalDate.parse("2022-07-20")));
+    }
+
+    @Test
+    void comprobar_updateNextDate_para_un_amigo_solo() throws Exception {
+        app.updateFriend("guille");
+        Friend guille = app.getFriend("guille");
+        assertEquals(fechaGuilleActualizada, guille.getNextDate().toString());
     }
 }

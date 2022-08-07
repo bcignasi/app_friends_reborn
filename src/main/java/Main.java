@@ -1,7 +1,5 @@
 import java.io.File;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
 
@@ -25,6 +23,7 @@ public class Main {
                 4.Show friend
                 5.Edit friend
                 6.Sort friend by name
+                7. Update friend nextDate
                 0.Exit
                                 
                                 
@@ -152,6 +151,20 @@ public class Main {
                 }
                 System.out.println();
             }
+
+            case 7 -> {
+                System.out.println("enter name of friend");
+                String inquiredFriend = Input.getString();
+                if (app.friendAlreadyExists(inquiredFriend) == -1) {
+
+                    System.out.println("friend doesn't exist");
+                    break;
+                }
+                Friend thatFriend = app.getFriend(inquiredFriend);
+                thatFriend.setNextDate();
+                System.out.println("\n" + thatFriend.showData() + "\n");
+
+            }
         }
     }
 
@@ -196,4 +209,3 @@ public class Main {
         }
     }
 }
-
