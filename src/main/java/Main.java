@@ -66,6 +66,14 @@ public class Main {
             case 2 -> {
                 System.out.println("enter name to add friend");
                 String lovedFriend = Input.getString();
+                if (lovedFriend.isBlank()) {
+                    System.out.println("name can't be empty");
+                    break;
+                }
+                if (app.friendAlreadyExists(lovedFriend) >= 0) {
+                    System.out.println("name already in use by some other of your stupid friends (you're stupid as well");
+                    break;
+                }
                 System.out.println("enter days between appointments");
                 int incDaysOfFriend = Input.getNumber();
                 app.addFriend(lovedFriend, incDaysOfFriend);
@@ -179,13 +187,6 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-
-        /*app.addFriend("diego");
-        app.addFriend("sediego");
-        app.addFriend("sedieg");
-
-        app.saveData();*/
-
         File f = new File("friendList.txt");
         if (f.isFile()) {
 
@@ -195,7 +196,6 @@ public class Main {
 
         while (true) {
 
-            // updateTime();
             printMenu();
 
             int option = Input.getNumber();

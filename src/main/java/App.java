@@ -133,21 +133,22 @@ public class App {
         return list;
     }
 
-    public List<Friend> getFriendListSortedByNextDate () {
+    public List<Friend> getFriendListSortedByNextDate() {
         List<Friend> list = getFriendList();
         list.sort(Comparator.comparing(Friend::getNextDate));
         //list.sort((Friend a, Friend b) -> a.getNextDate().compareTo(b.getNextDate()));
 
         return list;
     }
-/*
-    private static int compareFriendByName(Friend a, Friend b) {
-        String aName = a.getName();
-        String bName = b.getName();
-        return aName.compareTo(bName);
-    }
-*/
-    public List<Friend> getFriendListSortedByName () {
+
+    /*
+        private static int compareFriendByName(Friend a, Friend b) {
+            String aName = a.getName();
+            String bName = b.getName();
+            return aName.compareTo(bName);
+        }
+    */
+    public List<Friend> getFriendListSortedByName() {
         List<Friend> list = getFriendList();
         //list.sort(App::compareFriendByName);
 
@@ -197,32 +198,41 @@ public class App {
             friends[i] = null;
         }
 
-        File file = new File("friendList.txt");
+        try {
+            File file = new File("friendList.txt");
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
 
-        FileReader fr = new FileReader(file);
+            String line;
 
-        BufferedReader br = new BufferedReader(fr);
-
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            // Tratamiento linea en blanco
-            if(line.strip().equals("")) continue;
-            // Tratamiento linea incorrecta
-            if(line.length() == line.replace(",","").length() - 2) {
-                throw new Exception(String.format("Bad line: %s", line));
+            while ((line = br.readLine()) != null) {
+                // Tratamiento linea en blanco
+                if (line.strip().equals("")) continue;
+                // Tratamiento linea incorrecta
+                if (line.length() == line.replace(",", "").length() - 2) {
+                    throw new Exception(String.format("Bad line: %s", line));
+                }
+                String[] fields = line.split(",");
+                this.friendLoader(fields[0], LocalDate.parse(fields[1]), Integer.parseInt(fields[2]));
             }
-            String[] fields = line.split(",");
-            this.friendLoader(fields[0], LocalDate.parse(fields[1]), Integer.parseInt(fields[2]));
+            br.close();
+        } catch (IOException e) {
+            System.out.println("couldn't load friendlist.txt");
+            System.exit(-1);
         }
-        br.close();
     }
 
-    public void saveData() throws IOException {
+    public void saveData() {
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("friendList.txt"));
-        writer.write(this.toString());
-        writer.close();
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("friendList.txt"));
+            writer.write(this.toString());
+            writer.close();
+        } catch (IOException e) {
+
+            System.out.println("couldn't save data");
+            System.exit(-1);
+        }
 
     }
 

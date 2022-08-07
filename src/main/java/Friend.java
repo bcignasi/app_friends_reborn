@@ -8,10 +8,6 @@ public class Friend {
      */
     private String name;
     /**
-     * date friend was first added
-     */
-    private LocalDate initDate;
-    /**
      * Next notification date
      */
     private LocalDate nextDate;
@@ -53,22 +49,8 @@ public class Friend {
         this.name = name.strip();
     }
 
-    public LocalDate getInitDate() {
-        return initDate;
-    }
-
     public LocalDate getNextDate() {
         return this.nextDate;
-    }
-
-    /**
-     * @return true if notification is needed.
-     */
-
-    public boolean checkDate() {
-
-        return (remainingDays() == 0);
-
     }
 
     /**
